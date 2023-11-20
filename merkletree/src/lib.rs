@@ -72,7 +72,7 @@ where
 
 #[derive(Default)]
 pub struct ShaHasher(Sha256);
-pub type Node = Digest;
+pub type Node = [u8; 32];
 
 impl Hasher for ShaHasher {
     fn write(&mut self, bytes: &[u8]) {
@@ -90,7 +90,7 @@ impl Algorithm<Node> for ShaHasher {
     }
 }
 
-pub fn u64_to_u8_32_array(num: u64) -> [u8; 32] {
+pub fn u64_to_bytes(num: u64) -> [u8; 32] {
     let mut arr = [0u8; 32];
     arr[..8].copy_from_slice(&num.to_be_bytes());
     arr
@@ -212,4 +212,13 @@ where
     fn into(self) -> (Vec<Node>, Vec<bool>) {
         (self.inner.lemma().to_vec(), self.inner.path().to_vec())
     }
+}
+
+// convenience fn to hash two u64 values
+pub fn hash2(a: [u8; 32], b: [u8; 32]) -> [u8; 32] {
+    let mut res = Vec::new();
+    res.extend_from_slice(&a);
+    res.extend_from_slice(&b);
+
+    Sha256::digest(res).try_into().unwrap()
 }

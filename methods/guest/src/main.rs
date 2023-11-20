@@ -1,7 +1,7 @@
 #![no_main]
 
 use merkletree::Proof;
-use risc0_zkvm::{guest::env, sha::Digest};
+use risc0_zkvm::guest::env;
 use sha2::{Digest as _, Sha256};
 risc0_zkvm::guest::entry!(main);
 
@@ -59,10 +59,7 @@ pub fn main() {
     let (signal_hash, external_nullifier, root, nullifier_hash) = public_inputs;
 
     let circuit_output = semaphore(identity_nullifier, identity_trapdoor, external_nullifier);
-    let verify = tree_siblings.verify(
-        &Digest::try_from(root.as_slice()).unwrap(),
-        &circuit_output[0],
-    );
+    let verify = tree_siblings.verify(&root, &circuit_output[0]);
 
     assert!(verify);
     assert!(nullifier_hash == circuit_output[1]);
@@ -70,5 +67,13 @@ pub fn main() {
     //let output: [u8; 32] = [0; 32];
 
     // write public output to the journal
-    env::commit(&verify);
+    env::commit(&(
+        verify,
+        signal_hash,
+        external_nullifier,
+        root,
+        nullifier_hash,
+    ));
 }
+
+//(bool, [u8;32], [u8;32], [u8;32], [u8;32])
