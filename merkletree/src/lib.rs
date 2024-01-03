@@ -2,24 +2,13 @@
 use risc0_zkvm::guest;
 use risc0_zkvm::{
     declare_syscall,
-    sha::{
-        rust_crypto::{Digest as _, Sha256},
-        Digest,
-    },
+    sha::rust_crypto::{Digest as _, Sha256},
 };
 
 declare_syscall!(
     /// RISC0 syscall for providing oracle access to a vector committed to by the host.
     pub SYS_VECTOR_ORACLE);
 
-/*use risc0_zkvm::{
-    default_prover,
-    sha::{
-        rust_crypto::{Digest as _, Sha256},
-        Digest,
-    },
-    ExecutorEnv,
-};*/
 use serde::{Deserialize, Serialize};
 
 //use merkle_light::merkle::MerkleTree;
