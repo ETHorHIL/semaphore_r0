@@ -27,7 +27,7 @@ The "Guest" is essentially the circuit and the "Host" is the prover where witnes
     │   ├── Cargo.toml
     │   └── src
     │       └── bin
-    │           └── method_name.rs         <-- [Guest, contains Semaphore logic]
+    │           └── method_name.rs         
     └── src
-        └── lib.rs
+        └── lib.rs                        <-- [Guest, contains Semaphore logic]
 ```
